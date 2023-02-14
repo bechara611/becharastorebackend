@@ -3,7 +3,7 @@ import { GenerarJWT } from "../helpers/GenerarJWT.js";
 import { ComprobarUser, ComprobarUserAndPassword } from "../helpers/HelpersAuth.js";
 import Usuarios from "../models/Usuarios.js";
 
-//?CREACION DEL METODO DE OBTENER TODOS LOS USUARIOS */
+/*?CREACION DEL METODO DE OBTENER TODOS LOS USUARIOS */
 export const AuthGet = async (req = request, res = response) => {
     try {
         //?obtenemos todos los usuarios con el metodo find del modelo
@@ -38,7 +38,7 @@ export const AuthGet = async (req = request, res = response) => {
 
 
 
-//?CREACION DEL METODO DE REGISTRO */
+/*?CREACION DEL METODO DE REGISTRO */
 export const AuthPostRegister = async (req = request, res = response) => {
     try {
         //obtenemos todo del body
@@ -104,7 +104,7 @@ export const AuthPostRegister = async (req = request, res = response) => {
 }
 
 
-//?CREACION DEL METODO DE LOGIN*/
+/*?CREACION DEL METODO DE LOGIN*/
 //TODO login
 export const AuthPostLogin = async (req = request, res = response) => {
     try {
@@ -174,7 +174,7 @@ export const AuthPostLogin = async (req = request, res = response) => {
 
 
 
-//?DELETE Poner inactivo un usuario
+//?Poner inactivo un usuario
 export const AuthPostDelete = async (req = request, res = response) => {
     try {
         //ya en el check se comprueba si lleva o no token la peticion
@@ -229,7 +229,6 @@ export const AuthPostDelete = async (req = request, res = response) => {
 
 }
 
-//? ACTUALIZAR PASSWORD DE UN USUARIO, RECIBE EL TOKEN, EMAIL,PASSWORD1 Y PASSWORD2 
 export const AuthUpdatePassword = async (req = request, res = response) => {
     try {
 

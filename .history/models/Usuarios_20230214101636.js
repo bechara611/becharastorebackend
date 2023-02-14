@@ -16,9 +16,6 @@ const usuariosSchema = new Schema({
     },
     level:{
         type:String,
-    },
-    active:{
-        type:Boolean,
     }
 })
 

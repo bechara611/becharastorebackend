@@ -31,13 +31,10 @@ check('token','PLEASE, INSERT A TOKEN').not().isEmpty(),
 ValidarErrores,
 AuthPostDelete)
 
-RouterAuth.patch('/change',
+RouterAuth.update('/change',
 check('email','PLEASE INSERT A EMAIL').not().isEmpty(),
 check('password','PLEASE INSERT A PASSWORD').not().isEmpty(),
 check('password','PLEASE INSERT A VALID PASSWORD').isLength({min:6,max:20}),
-check('password2','PLEASE INSERT A PASSWORD').not().isEmpty(),
-check('password2','PLEASE INSERT A VALID PASSWORD').isLength({min:6,max:20}),
-check('token','PLEASE, INSERT A TOKEN').not().isEmpty(),
 ValidarErrores,
 AuthUpdatePassword)
 

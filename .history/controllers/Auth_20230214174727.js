@@ -3,42 +3,7 @@ import { GenerarJWT } from "../helpers/GenerarJWT.js";
 import { ComprobarUser, ComprobarUserAndPassword } from "../helpers/HelpersAuth.js";
 import Usuarios from "../models/Usuarios.js";
 
-//?CREACION DEL METODO DE OBTENER TODOS LOS USUARIOS */
-export const AuthGet = async (req = request, res = response) => {
-    try {
-        //?obtenemos todos los usuarios con el metodo find del modelo
-        const usuarios = await Usuarios.find();
-
-
-        return res.status(200).json({
-            ok: true,
-            usuarios
-        })
-
-    } catch (error) {
-        console.log(error)
-        res.status(400).json({
-            ok: false,
-            errores: {
-                errors: [{
-
-
-                    msg: 'Internal error',
-
-
-                }
-                ],
-
-            }
-        })
-    }
-
-}
-
-
-
-
-//?CREACION DEL METODO DE REGISTRO */
+/*?CREACION DEL METODO DE REGISTRO */
 export const AuthPostRegister = async (req = request, res = response) => {
     try {
         //obtenemos todo del body
@@ -104,7 +69,7 @@ export const AuthPostRegister = async (req = request, res = response) => {
 }
 
 
-//?CREACION DEL METODO DE LOGIN*/
+/*?CREACION DEL METODO DE LOGIN*/
 //TODO login
 export const AuthPostLogin = async (req = request, res = response) => {
     try {
@@ -172,9 +137,40 @@ export const AuthPostLogin = async (req = request, res = response) => {
 
 }
 
+/*?CREACION DEL METODO DE OBTENER TODOS LOS USUARIOS */
+//TODO obtener todos los user
+export const AuthGet = async (req = request, res = response) => {
+    try {
+        //?obtenemos todos los usuarios con el metodo find del modelo
+        const usuarios = await Usuarios.find();
 
 
-//?DELETE Poner inactivo un usuario
+        return res.status(200).json({
+            ok: true,
+            usuarios
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+            ok: false,
+            errores: {
+                errors: [{
+
+
+                    msg: 'Internal error',
+
+
+                }
+                ],
+
+            }
+        })
+    }
+
+}
+
+//?Poner inactivo un usuario
 export const AuthPostDelete = async (req = request, res = response) => {
     try {
         //ya en el check se comprueba si lleva o no token la peticion
@@ -229,7 +225,6 @@ export const AuthPostDelete = async (req = request, res = response) => {
 
 }
 
-//? ACTUALIZAR PASSWORD DE UN USUARIO, RECIBE EL TOKEN, EMAIL,PASSWORD1 Y PASSWORD2 
 export const AuthUpdatePassword = async (req = request, res = response) => {
     try {
 
@@ -256,11 +251,6 @@ export const AuthUpdatePassword = async (req = request, res = response) => {
             })
 
         }
-
-             //TODO metodo de comprobar el JWT
-
-
-
         const userLogueado = await ComprobarUserAndPassword(email, password);
         if (!userLogueado) {
             return res.status(200).json({
@@ -279,9 +269,6 @@ export const AuthUpdatePassword = async (req = request, res = response) => {
             })
 
         }
-             //TODO METODO ACTUALIZAR LA CLAVE
-
-
 
         return res.status(200).json({ ok: true })
 

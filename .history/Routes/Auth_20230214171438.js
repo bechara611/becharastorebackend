@@ -1,7 +1,7 @@
 //RUTA: URL/AUTH/
 import { Router } from "express";
 import { check } from "express-validator";
-import { AuthGet, AuthPostDelete, AuthPostLogin, AuthPostRegister, AuthUpdatePassword } from "../controllers/Auth.js";
+import { AuthGet, AuthPostLogin, AuthPostRegister } from "../controllers/Auth.js";
 import { ValidarErrores } from "../helpers/ValidarErrores.js";
 
 const RouterAuth = Router();
@@ -27,18 +27,7 @@ AuthPostLogin)
 
 RouterAuth.post('/delete',
 check('email','PLEASE INSERT A EMAIL').not().isEmpty(),
-check('token','PLEASE, INSERT A TOKEN').not().isEmpty(),
 ValidarErrores,
-AuthPostDelete)
-
-RouterAuth.patch('/change',
-check('email','PLEASE INSERT A EMAIL').not().isEmpty(),
-check('password','PLEASE INSERT A PASSWORD').not().isEmpty(),
-check('password','PLEASE INSERT A VALID PASSWORD').isLength({min:6,max:20}),
-check('password2','PLEASE INSERT A PASSWORD').not().isEmpty(),
-check('password2','PLEASE INSERT A VALID PASSWORD').isLength({min:6,max:20}),
-check('token','PLEASE, INSERT A TOKEN').not().isEmpty(),
-ValidarErrores,
-AuthUpdatePassword)
+AuthPostLogin)
 
 export default RouterAuth;
