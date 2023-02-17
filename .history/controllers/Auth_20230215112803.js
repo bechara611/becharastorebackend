@@ -4,11 +4,6 @@ import { ComprobarUser, ComprobarUserAndPassword } from "../helpers/HelpersAuth.
 import { VerificarJWT } from "../helpers/VerificarJWT.js";
 import Usuarios from "../models/Usuarios.js";
 
-
-
-//RUTA: URL/AUTH/
-
-
 //?CREACION DEL METODO DE OBTENER TODOS LOS USUARIOS */
 export const AuthGet = async (req = request, res = response) => {
     try {
@@ -41,11 +36,14 @@ export const AuthGet = async (req = request, res = response) => {
 
 }
 
+
+
+
 //?CREACION DEL METODO DE REGISTRO */
 export const AuthPostRegister = async (req = request, res = response) => {
     try {
         //obtenemos todo del body
-        const { email, name, password, level = 'USER' } = req.body
+        const { email, name, password, level = 'user' } = req.body
         //comprobamos que en efecto el email no exista
         const resultado = await ComprobarUser(email);
         if (resultado) {
@@ -108,7 +106,7 @@ export const AuthPostRegister = async (req = request, res = response) => {
 
 
 //?CREACION DEL METODO DE LOGIN*/
-
+//TODO login
 export const AuthPostLogin = async (req = request, res = response) => {
     try {
         const { email, password } = req.body
@@ -176,18 +174,18 @@ export const AuthPostLogin = async (req = request, res = response) => {
 }
 
 
-//? ACTUALIZAR PASSWORD DE UN USUARIO, RECIBE EL TOKEN, EMAIL,PASSWORD1 Y PASSWORD2 
-export const AuthUpdatePassword = async (req = request, res = response) => {
-    try {
 
+//?DELETE Poner inactivo un usuario
+export const AuthPostDelete = async (req = request, res = response) => {
+    try {
         //ya en el check se comprueba si lleva o no token la peticion
         const { token } = req.headers;
-        const { email, password, password2 } = req.body
+        const { email } = req.body
 
-        //?comprobamos que en efecto el email a poner en inactivo exista
-        const usuario = await ComprobarUser(email);
-        if (!usuario) {
-            return res.status(200).json({
+        //comprobamos que en efecto el email a poner en inactivo exista
+        const resultado = await ComprobarUser(email);
+        if (!resultado) {
+            return res.status(400).json({
                 ok: false,
                 errores: {
                     errors: [{
@@ -203,32 +201,22 @@ export const AuthUpdatePassword = async (req = request, res = response) => {
             })
 
         }
-        if (password === password2) {
-            return res.status(200).json({
-                ok: false,
-                errores: {
-                    errors: [{
+        //TODO metodo de comprobar el JWT
+        const {email:EmailToken,_id} = await VerificarJWT(token);
+     
 
+        //TODO que unicamente el usuario administrador pueda borrar un usuario o ponerlo inactivo
 
-                        msg: 'PLEASE, USE ANOTHER PASSWORD',
-
-
-                    }
-                    ],
-
-                }
-            })
-
-        }
-        const userLogueado = await ComprobarUserAndPassword(email, password);
-        if (!userLogueado) {
+        const infoAdmin = await ComprobarUser(EmailToken);
+        //?Si el usuario no existe devuelve un return de error
+        if (!infoAdmin) {
             return res.status(400).json({
                 ok: false,
                 errores: {
                     errors: [{
 
 
-                        msg: 'THE CURRENT PASSWORD IS INCORRECT',
+                        msg: 'EMAIL NOT FOUND',
 
 
                     }
@@ -238,11 +226,11 @@ export const AuthUpdatePassword = async (req = request, res = response) => {
             })
 
         }
-      
-        const usuarioActualizado = await Usuarios.findByIdAndUpdate(userLogueado._id, { password: password2 }, { new: true })
+        console.log(infoAdmin.level)
+        //TODO retornar el usuario borrado
 
 
-        return res.status(200).json({ ok: true, user: usuarioActualizado })
+        return res.status(200).json({ ok: true, token })
 
     } catch (error) {
         console.log(error)
@@ -264,18 +252,18 @@ export const AuthUpdatePassword = async (req = request, res = response) => {
 
 }
 
-
-//?DELETE Poner inactivo un usuario
-export const AuthPostDelete = async (req = request, res = response) => {
+//? ACTUALIZAR PASSWORD DE UN USUARIO, RECIBE EL TOKEN, EMAIL,PASSWORD1 Y PASSWORD2 
+export const AuthUpdatePassword = async (req = request, res = response) => {
     try {
+
         //ya en el check se comprueba si lleva o no token la peticion
         const { token } = req.headers;
-        const { email } = req.body
+        const { email, password, password2 } = req.body
 
         //comprobamos que en efecto el email a poner en inactivo exista
-        const usuarioABorrar = await ComprobarUser(email);
-        if (!usuarioABorrar) {
-            return res.status(400).json({
+        const resultado = await ComprobarUser(email);
+        if (!resultado) {
+            return res.status(200).json({
                 ok: false,
                 errores: {
                     errors: [{
@@ -291,15 +279,20 @@ export const AuthPostDelete = async (req = request, res = response) => {
             })
 
         }
-        //?Si el usuario ya fue borrado, o su estado es falso , entonces retorna que ya fue asi
-        if (usuarioABorrar.active === false) {
+
+             //TODO metodo de comprobar el JWT
+
+
+
+        const userLogueado = await ComprobarUserAndPassword(email, password);
+        if (!userLogueado) {
             return res.status(400).json({
                 ok: false,
                 errores: {
                     errors: [{
 
 
-                        msg: 'USER ALREADY DELETED',
+                        msg: 'INCORRECT PASSWORD',
 
 
                     }
@@ -309,180 +302,15 @@ export const AuthPostDelete = async (req = request, res = response) => {
             })
 
         }
-        //?Metodo para verificar el token y obtener el email y el mongoID porque lo tiene el payload del JWT
-        const { email: EmailToken, _id } = await VerificarJWT(token);
-
-
-       
-
-        const infoAdmin = await ComprobarUser(EmailToken);
-        //?Si el usuario no existe devuelve un return de error
-        if (!infoAdmin) {
-            return res.status(400).json({
-                ok: false,
-                errores: {
-                    errors: [{
-
-
-                        msg: 'ADMIN/EMAIL NOT FOUND',
-
-
-                    }
-                    ],
-
-                }
-            })
-
-        }
+             //TODO METODO ACTUALIZAR LA CLAVE
 
 
 
-        //?SI NO ES ADMIN NO LO DEJAMOS PASAR
-
-        if (infoAdmin.level === 'user' || infoAdmin.level === 'USER') {
-            return res.status(400).json({
-                ok: false,
-                errores: {
-                    errors: [{
-
-
-                        msg: 'YOU DONT HAVE PERMISSION TO DO THAT',
-
-
-                    }
-                    ],
-
-                }
-            })
-        }
-        //?ACTUALIZAMOS AL USUARIO QUE SE QUIERE ELIMINAR O COLOCAR COMO INACTIVO
-       
-        const usuarioBorrado = await Usuarios.findByIdAndUpdate(usuarioABorrar._id, { active: false }, { new: true });
-
-
-        return res.status(200).json({ ok: true, usuarioBorrado })
+        return res.status(200).json({ ok: true })
 
     } catch (error) {
         console.log(error)
-        return res.status(400).json({
-            ok: false,
-            errores: {
-                errors: [{
-
-
-                    msg: 'Internal error',
-
-
-                }
-                ],
-
-            }
-        })
-    }
-
-}
-
-
-//?UPDATE Poner ACTIVO un usuario, opuesto al delete
-export const AuthPostActiveUser = async (req = request, res = response) => {
-    try {
-        //ya en el check se comprueba si lleva o no token la peticion
-        const { token } = req.headers;
-        const { email } = req.body
-
-        //comprobamos que en efecto el email a poner en inactivo exista
-        const usuarioABorrar = await ComprobarUser(email);
-        if (!usuarioABorrar) {
-            return res.status(400).json({
-                ok: false,
-                errores: {
-                    errors: [{
-
-
-                        msg: 'EMAIL NOT FOUND',
-
-
-                    }
-                    ],
-
-                }
-            })
-
-        }
-        //?Si el usuario ya fue borrado, o su estado es falso , entonces retorna que ya fue asi
-        if (usuarioABorrar.active === true) {
-            return res.status(400).json({
-                ok: false,
-                errores: {
-                    errors: [{
-
-
-                        msg: 'USER ALREADY ACTIVE',
-
-
-                    }
-                    ],
-
-                }
-            })
-
-        }
-        //?Metodo para verificar el token y obtener el email y el mongoID porque lo tiene el payload del JWT
-        const { email: EmailToken, _id } = await VerificarJWT(token);
-
-
-
-
-        const infoAdmin = await ComprobarUser(EmailToken);
-        //?Si el usuario no existe devuelve un return de error
-        if (!infoAdmin) {
-            return res.status(400).json({
-                ok: false,
-                errores: {
-                    errors: [{
-
-
-                        msg: 'ADMIN/EMAIL NOT FOUND',
-
-
-                    }
-                    ],
-
-                }
-            })
-
-        }
-
-
-
-        //?SI NO ES ADMIN NO LO DEJAMOS PASAR
-
-        if (infoAdmin.level === 'user' || infoAdmin.level === 'USER') {
-            return res.status(400).json({
-                ok: false,
-                errores: {
-                    errors: [{
-
-
-                        msg: 'YOU DONT HAVE PERMISSION TO DO THAT',
-
-
-                    }
-                    ],
-
-                }
-            })
-        }
-        //?ACTUALIZAMOS AL USUARIO QUE SE QUIERE ELIMINAR O COLOCAR COMO INACTIVO
-
-        const usuarioBorrado = await Usuarios.findByIdAndUpdate(usuarioABorrar._id, { active: true }, { new: true });
-
-
-        return res.status(200).json({ ok: true, usuarioBorrado })
-
-    } catch (error) {
-        console.log(error)
-        return res.status(400).json({
+        res.status(400).json({
             ok: false,
             errores: {
                 errors: [{

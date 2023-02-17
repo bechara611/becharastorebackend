@@ -1,7 +1,7 @@
 //RUTA: URL/AUTH/
 import { Router } from "express";
 import { check } from "express-validator";
-import { AuthGet, AuthPostActiveUser, AuthPostDelete, AuthPostLogin, AuthPostRegister, AuthUpdatePassword } from "../controllers/Auth.js";
+import { AuthGet, AuthPostDelete, AuthPostLogin, AuthPostRegister, AuthUpdatePassword } from "../controllers/Auth.js";
 import { ValidarErrores } from "../helpers/ValidarErrores.js";
 import { VerificarJWT } from "../helpers/VerificarJWT.js";
 
@@ -32,13 +32,6 @@ check('token','PLEASE, INSERT A TOKEN').not().isEmpty(),
 check('token','INSERT A VALID A TOKEN').custom(VerificarJWT),
 ValidarErrores,
 AuthPostDelete)
-
-RouterAuth.post('/active',
-check('email','PLEASE INSERT A EMAIL').not().isEmpty(),
-check('token','PLEASE, INSERT A TOKEN').not().isEmpty(),
-check('token','INSERT A VALID A TOKEN').custom(VerificarJWT),
-ValidarErrores,
-AuthPostActiveUser)
 
 RouterAuth.post('/change',
 check('email','PLEASE INSERT A EMAIL').not().isEmpty(),

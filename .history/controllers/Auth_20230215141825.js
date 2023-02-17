@@ -4,11 +4,6 @@ import { ComprobarUser, ComprobarUserAndPassword } from "../helpers/HelpersAuth.
 import { VerificarJWT } from "../helpers/VerificarJWT.js";
 import Usuarios from "../models/Usuarios.js";
 
-
-
-//RUTA: URL/AUTH/
-
-
 //?CREACION DEL METODO DE OBTENER TODOS LOS USUARIOS */
 export const AuthGet = async (req = request, res = response) => {
     try {
@@ -108,7 +103,7 @@ export const AuthPostRegister = async (req = request, res = response) => {
 
 
 //?CREACION DEL METODO DE LOGIN*/
-
+//TODO login
 export const AuthPostLogin = async (req = request, res = response) => {
     try {
         const { email, password } = req.body
@@ -238,7 +233,7 @@ export const AuthUpdatePassword = async (req = request, res = response) => {
             })
 
         }
-      
+        //TODO METODO ACTUALIZAR LA CLAVE
         const usuarioActualizado = await Usuarios.findByIdAndUpdate(userLogueado._id, { password: password2 }, { new: true })
 
 
@@ -313,7 +308,7 @@ export const AuthPostDelete = async (req = request, res = response) => {
         const { email: EmailToken, _id } = await VerificarJWT(token);
 
 
-       
+        //TODO que unicamente el usuario administrador pueda borrar un usuario o ponerlo inactivo
 
         const infoAdmin = await ComprobarUser(EmailToken);
         //?Si el usuario no existe devuelve un return de error
@@ -356,7 +351,7 @@ export const AuthPostDelete = async (req = request, res = response) => {
             })
         }
         //?ACTUALIZAMOS AL USUARIO QUE SE QUIERE ELIMINAR O COLOCAR COMO INACTIVO
-       
+        //TODO retornar el usuario borrado
         const usuarioBorrado = await Usuarios.findByIdAndUpdate(usuarioABorrar._id, { active: false }, { new: true });
 
 
@@ -431,7 +426,7 @@ export const AuthPostActiveUser = async (req = request, res = response) => {
         const { email: EmailToken, _id } = await VerificarJWT(token);
 
 
-
+        //TODO que unicamente el usuario administrador pueda borrar un usuario o ponerlo inactivo
 
         const infoAdmin = await ComprobarUser(EmailToken);
         //?Si el usuario no existe devuelve un return de error
@@ -474,7 +469,7 @@ export const AuthPostActiveUser = async (req = request, res = response) => {
             })
         }
         //?ACTUALIZAMOS AL USUARIO QUE SE QUIERE ELIMINAR O COLOCAR COMO INACTIVO
-
+        //TODO retornar el usuario borrado
         const usuarioBorrado = await Usuarios.findByIdAndUpdate(usuarioABorrar._id, { active: true }, { new: true });
 
 

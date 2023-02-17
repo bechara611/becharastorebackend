@@ -22,3 +22,11 @@ export const ComprobarUserAndPassword = async (email,password) => {
     
     }
 
+export const ComprobarAdmin = async(email)=>{
+    const user = await Usuarios.findOne({email:email})
+    if(user?.level!=='ADMIN'){
+        throw new Error('YOU ARE NOT ADMIN, ACCESS DENIED!')
+    }else{
+        return null
+    }
+}
