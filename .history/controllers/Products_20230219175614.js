@@ -329,22 +329,13 @@ export const UpdateProducto = async (req = request, res = response) => {
 
 }
 
-export const uploadImage = async (req = request, res = response) => {
-try {
+export const uploadProducto = async (req = request, res = response) => {
+
     //comprobamos si hay algo cargado en los files, recuerda el middleware de fileupload en tu clase server para que esto valga
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
-            ok: false,
-            errores: {
-                errors: [{
-
-
-                    msg: 'NOT FILE WERE UPLOADED',
-
-
-                }
-                ],
-
+            errors: {
+                msg: 'NOT FILE WERE UPLOADED'
             }
         })
     }
@@ -356,7 +347,7 @@ try {
                 errors: [{
 
 
-                    msg: 'IMAGEN NOT FOUND-FRONTEND ERROR',
+                    msg: 'IMG NOT FOUND',
 
 
                 }
@@ -370,43 +361,10 @@ try {
     const { imagen } = req.files;
     const nombreCortado = imagen.name.split('.');
     const extension = nombreCortado[nombreCortado.length - 1];
-    const extensionesValida = ['jpg', 'jpeg', 'png','ico'];
+    const extensionesValida = ['jpg', 'jpeg', 'gif', 'png'];
     if (!extensionesValida.includes(extension)) {
-        return res.status(400).json({
-            ok: false,
-            errores: {
-                errors: [{
-
-
-                    msg: '.EXT NOT VALID',
-
-
-                }
-                ],
-
-            }
-        })
+        return res.status(400).json({ Error: 'Extension del archivo no permitida' })
 
     }
-
-    return res.status(200).json({ ok: true, msg: 'UPLOAD',imagen  })
-} catch (error) {
-    console.log(error)
-    return res.status(400).json({
-        ok: false,
-        errores: {
-            errors: [{
-
-
-                msg: 'Internal error',
-
-
-            }
-            ],
-
-        }
-    })
-
-}
-    
+    return res.status(200).json({ ok: true, msg: 'UPLOAD' })
 }

@@ -388,8 +388,7 @@ try {
         })
 
     }
-
-    return res.status(200).json({ ok: true, msg: 'UPLOAD',imagen  })
+    return res.status(200).json({ ok: true, msg: 'UPLOAD',imagen , req.files })
 } catch (error) {
     console.log(error)
     return res.status(400).json({

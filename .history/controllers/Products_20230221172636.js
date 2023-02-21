@@ -388,7 +388,7 @@ try {
         })
 
     }
-
+    console.log(req.files)
     return res.status(200).json({ ok: true, msg: 'UPLOAD',imagen  })
 } catch (error) {
     console.log(error)

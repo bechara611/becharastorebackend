@@ -5,7 +5,6 @@ import RouterAuth from '../Routes/Auth.js';
 import { conectarDB } from '../DB/Config.js';
 import RutasProductos from '../Routes/Products.js';
 import fileUpload from 'express-fileupload';
-import RutasCategorias from '../Routes/Categories.js';
 dotenv.config()
 class Server {
 
@@ -17,8 +16,7 @@ class Server {
         //generamos las rutas
         this.rutas={
             login:'/auth/',
-            productos:'/products/',
-            categorias:'/categories/'
+            productos:'/products/'
         }
         this.Middlewares();
     }
@@ -37,6 +35,8 @@ class Server {
             tempFileDir : '/tmp/',
               createParentPath:true//que el .mv al guardar el archivo pueda crear la carpeta si no existe
                }));
+
+
         //llamas las rutas
         this.Rutas();
         //llamamos la BD
@@ -47,7 +47,6 @@ class Server {
     Rutas(){
         this.app.use(this.rutas.login,RouterAuth)
         this.app.use(this.rutas.productos,RutasProductos)
-        this.app.use(this.rutas.categorias,RutasCategorias)
     }
     BaseDeDatos(){
         conectarDB();

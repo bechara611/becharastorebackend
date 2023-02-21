@@ -5,7 +5,6 @@ import RouterAuth from '../Routes/Auth.js';
 import { conectarDB } from '../DB/Config.js';
 import RutasProductos from '../Routes/Products.js';
 import fileUpload from 'express-fileupload';
-import RutasCategorias from '../Routes/Categories.js';
 dotenv.config()
 class Server {
 
@@ -14,13 +13,13 @@ class Server {
         this.app = express();
         //obtenemos nuestro port
         this.port = process.env.PORT || 8081;
+        this.Middlewares();
         //generamos las rutas
         this.rutas={
             login:'/auth/',
-            productos:'/products/',
-            categorias:'/categories/'
+            productos:'/products/'
         }
-        this.Middlewares();
+
     }
     Middlewares(){
         //utilizar la parte del public static
@@ -29,25 +28,21 @@ class Server {
         this.app.use(express.json())
         //cors para el acceso a nuestra aplicacion
         this.app.use(cors())
-
-
-        //middleware para que pueda leer la imagen que subas
-        this.app.use(fileUpload({
-            useTempFiles : true,
-            tempFileDir : '/tmp/',
-              createParentPath:true//que el .mv al guardar el archivo pueda crear la carpeta si no existe
-               }));
         //llamas las rutas
         this.Rutas();
         //llamamos la BD
         this.BaseDeDatos();
 
+        this.app.use(fileUpload({
+          useTempFiles : true,
+          tempFileDir : '/tmp/',
+            createParentPath:true//que el .mv al guardar el archivo pueda crear la carpeta si no existe
+             }));
     }
 
     Rutas(){
         this.app.use(this.rutas.login,RouterAuth)
         this.app.use(this.rutas.productos,RutasProductos)
-        this.app.use(this.rutas.categorias,RutasCategorias)
     }
     BaseDeDatos(){
         conectarDB();

@@ -3,7 +3,7 @@
 
 import { Router } from "express";
 import { check } from "express-validator";
-import { deleteProducto, getProductos, postInsertarProducto, UpdateProducto,uploadImage } from "../controllers/Products.js";
+import { deleteProducto, getProductos, postInsertarProducto, UpdateProducto } from "../controllers/Products.js";
 import { MiddlewareCantidad,MiddlewarePrecio } from "../helpers/HelpersProducts.js";
 import { ValidarErrores } from "../helpers/ValidarErrores.js";
 import { VerificarJWT } from "../helpers/VerificarJWT.js";
@@ -49,12 +49,5 @@ check('cantidad').custom(MiddlewareCantidad),
 check('price').custom(MiddlewarePrecio),
 ValidarErrores,
 UpdateProducto)
-
-
-RutasProductos.post('/upload/',
-check('token','INSERT A VALID A TOKEN').custom(VerificarJWT),
-
-ValidarErrores,
-uploadImage)
 
 export default RutasProductos;

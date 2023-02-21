@@ -133,7 +133,7 @@ export const deleteProducto = async (req = request, res = response) => {
     try {
         const { mongoid } = req.params;
         const { token } = req.headers
-        const { email: EmailToken } = await VerificarJWT(token);
+        const { email: EmailToken} = await VerificarJWT(token);
 
         const infoAdmin = await ComprobarUser(EmailToken);
         //?Si el usuario no existe devuelve un return de error
@@ -198,14 +198,14 @@ export const deleteProducto = async (req = request, res = response) => {
         }
         //TODO eliminar un producto
 
-        const productoEliminado = await Productos.findByIdAndDelete(mongoid, { new: true })
+        const productoEliminado = await Productos.findByIdAndDelete(mongoid,{renew:true})
         //?Tambien le retornamos todos los productos por si el frontend los necesita
-        const productoAll = await Productos.find();
+        const productoAll= await Productos.find();
 
-        return res.status(200).json({
+       return res.status(200).json({
             ok: true,
             productoEliminado,
-            productos: productoAll
+            productos:productoAll
         })
     } catch (error) {
         console.log(error)
@@ -232,7 +232,7 @@ export const UpdateProducto = async (req = request, res = response) => {
     try {
         const { token } = req.headers
         const { mongoid } = req.params;
-        const { email: EmailToken } = await VerificarJWT(token);
+        const { email: EmailToken} = await VerificarJWT(token);
         const { title, idstore, urlimg, description, categoria, descriptionLong, price, cantidad } = req.body
         const infoAdmin = await ComprobarUser(EmailToken);
         //?Si el usuario no existe devuelve un return de error
@@ -275,38 +275,33 @@ export const UpdateProducto = async (req = request, res = response) => {
 
         }
 
-        //TODO comprobar si el producto existe
-        const existe = await ComprobarIDProducto(mongoid)
-        if (!existe) {
-            return res.status(400).json({
-                ok: false,
-                errores: {
-                    errors: [{
+     //TODO comprobar si el producto existe
+const existe = await ComprobarIDProducto(mongoid)
+if (!existe) {
+    return res.status(400).json({
+        ok: false,
+        errores: {
+            errors: [{
 
 
-                        msg: 'PRODUCT NOT FOUND',
+                msg: 'PRODUCT NOT FOUND',
 
 
-                    }
-                    ],
-
-                }
-            })
-
+            }
+            ],
 
         }
+    })
+
+
+}
         //TODO ACTUALIZAR un producto
-        const productoActualizado = await Productos.findByIdAndUpdate(mongoid, {
+        const productoActualizado= await Productos.findByIdAndUpdate(mongoid,{
             title, idstore, urlimg, description, categoria, descriptionLong, price, cantidad
-        }, { new: true })
-
-        //?Tambien le retornamos todos los productos por si el frontend los necesita
-        const productoAll = await Productos.find();
-
-        return res.status(200).json({
+        },{renew:true})
+       return res.status(200).json({
             ok: true,
-            productoActualizado,
-            productos: productoAll
+            productoActualizado
         })
     } catch (error) {
         console.log(error)
@@ -327,86 +322,4 @@ export const UpdateProducto = async (req = request, res = response) => {
 
     }
 
-}
-
-export const uploadImage = async (req = request, res = response) => {
-try {
-    //comprobamos si hay algo cargado en los files, recuerda el middleware de fileupload en tu clase server para que esto valga
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).json({
-            ok: false,
-            errores: {
-                errors: [{
-
-
-                    msg: 'NOT FILE WERE UPLOADED',
-
-
-                }
-                ],
-
-            }
-        })
-    }
-    //ahora comparamos que exista un archivo llamado imagenes que se pasa por la raw-data
-    if (!req.files.imagen) {
-        return res.status(400).json({
-            ok: false,
-            errores: {
-                errors: [{
-
-
-                    msg: 'IMAGEN NOT FOUND-FRONTEND ERROR',
-
-
-                }
-                ],
-
-            }
-        })
-
-    }
-    //todo VALIDAR EXTENSION
-    const { imagen } = req.files;
-    const nombreCortado = imagen.name.split('.');
-    const extension = nombreCortado[nombreCortado.length - 1];
-    const extensionesValida = ['jpg', 'jpeg', 'png','ico'];
-    if (!extensionesValida.includes(extension)) {
-        return res.status(400).json({
-            ok: false,
-            errores: {
-                errors: [{
-
-
-                    msg: '.EXT NOT VALID',
-
-
-                }
-                ],
-
-            }
-        })
-
-    }
-
-    return res.status(200).json({ ok: true, msg: 'UPLOAD',imagen  })
-} catch (error) {
-    console.log(error)
-    return res.status(400).json({
-        ok: false,
-        errores: {
-            errors: [{
-
-
-                msg: 'Internal error',
-
-
-            }
-            ],
-
-        }
-    })
-
-}
-    
 }

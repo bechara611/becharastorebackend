@@ -329,7 +329,7 @@ export const UpdateProducto = async (req = request, res = response) => {
 
 }
 
-export const uploadImage = async (req = request, res = response) => {
+export const uploadProducto = async (req = request, res = response) => {
 try {
     //comprobamos si hay algo cargado en los files, recuerda el middleware de fileupload en tu clase server para que esto valga
     if (!req.files || Object.keys(req.files).length === 0) {
@@ -388,8 +388,7 @@ try {
         })
 
     }
-
-    return res.status(200).json({ ok: true, msg: 'UPLOAD',imagen  })
+    return res.status(200).json({ ok: true, msg: 'UPLOAD' })
 } catch (error) {
     console.log(error)
     return res.status(400).json({

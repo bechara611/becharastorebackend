@@ -3,7 +3,7 @@
 
 import { Router } from "express";
 import { check } from "express-validator";
-import { deleteProducto, getProductos, postInsertarProducto, UpdateProducto,uploadImage } from "../controllers/Products.js";
+import { deleteProducto, getProductos, postInsertarProducto, UpdateProducto } from "../controllers/Products.js";
 import { MiddlewareCantidad,MiddlewarePrecio } from "../helpers/HelpersProducts.js";
 import { ValidarErrores } from "../helpers/ValidarErrores.js";
 import { VerificarJWT } from "../helpers/VerificarJWT.js";
@@ -35,9 +35,8 @@ check('mongoid','PLEASE, INSERT A VALID PRODUCT ID').isMongoId(),
 ValidarErrores,
 deleteProducto)
 
-RutasProductos.post('/update/:mongoid',
+RutasProductos.post('/update/',
 check('token','INSERT A VALID A TOKEN').custom(VerificarJWT),
-check('mongoid','PLEASE, INSERT A VALID PRODUCT ID').isMongoId(),
 check('idstore','PLEASE, INSERT A ID STORE').not().isEmpty(),
 check('urlimg','PLEASE, INSERT AN IMAGE').not().isEmpty(),
 check('description','PLEASE, INSERT A SHORT DESCRIPTION').not().isEmpty(),
@@ -49,12 +48,5 @@ check('cantidad').custom(MiddlewareCantidad),
 check('price').custom(MiddlewarePrecio),
 ValidarErrores,
 UpdateProducto)
-
-
-RutasProductos.post('/upload/',
-check('token','INSERT A VALID A TOKEN').custom(VerificarJWT),
-
-ValidarErrores,
-uploadImage)
 
 export default RutasProductos;
