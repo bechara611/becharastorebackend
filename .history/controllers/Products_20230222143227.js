@@ -3,19 +3,6 @@ import { ComprobarUser } from "../helpers/HelpersAuth.js";
 import { ComprobarIDProducto, ComprobarTitle } from "../helpers/HelpersProducts.js";
 import { VerificarJWT } from "../helpers/VerificarJWT.js";
 import Productos from "../models/Productos.js";
-import cloudinary from 'cloudinary'
-import dotenv from 'dotenv'
-dotenv.config();
-
-const cloudinaryInstancia = cloudinary.v2;
-
-cloudinaryInstancia.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret:process.env.CLOUDINARY_API_SECRET
-  });
-  
-
 
 export const getProductos = async (req = request, res = response) => {
     try {
@@ -327,6 +314,8 @@ export const UpdateProducto = async (req = request, res = response) => {
             ok: false,
             errores: {
                 errors: [{
+
+
                     msg: 'Internal error',
 
 
@@ -401,15 +390,7 @@ try {
     }
 //?Desestructura el tempFilePath que se usa el claudinary para subir la foto
 const {tempFilePath} = imagen
-//TODO limitar tamano del archivo
- const resp= await cloudinaryInstancia.uploader.upload(tempFilePath)
- .then((resp)=>{
-    return resp
- })
- .catch((error)=>{console.log(error)})
-
-    const {secure_url} = resp;
-    return res.status(200).json({ ok: true, msg: 'UPLOAD',urlimg:secure_url })
+    return res.status(200).json({ ok: true, msg: 'UPLOAD',tempFilePath })
 } catch (error) {
     console.log(error)
     return res.status(400).json({

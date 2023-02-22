@@ -10,9 +10,9 @@ dotenv.config();
 const cloudinaryInstancia = cloudinary.v2;
 
 cloudinaryInstancia.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret:process.env.CLOUDINARY_API_SECRET
+    cloud_name: "dscpbsjbj",
+    api_key: "676279549555262",
+    api_secret: "isJTJxYYJ2KL38VJrEGCGcR4jeU"
   });
   
 
@@ -401,15 +401,14 @@ try {
     }
 //?Desestructura el tempFilePath que se usa el claudinary para subir la foto
 const {tempFilePath} = imagen
-//TODO limitar tamano del archivo
- const resp= await cloudinaryInstancia.uploader.upload(tempFilePath)
+
+ const respuesta= await cloudinaryInstancia.uploader.upload(tempFilePath)
  .then((resp)=>{
-    return resp
+    console.log(resp)
  })
  .catch((error)=>{console.log(error)})
 
-    const {secure_url} = resp;
-    return res.status(200).json({ ok: true, msg: 'UPLOAD',urlimg:secure_url })
+    return res.status(200).json({ ok: true, msg: 'UPLOAD',tempFilePath })
 } catch (error) {
     console.log(error)
     return res.status(400).json({

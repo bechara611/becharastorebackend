@@ -401,7 +401,7 @@ try {
     }
 //?Desestructura el tempFilePath que se usa el claudinary para subir la foto
 const {tempFilePath} = imagen
-//TODO limitar tamano del archivo
+
  const resp= await cloudinaryInstancia.uploader.upload(tempFilePath)
  .then((resp)=>{
     return resp
