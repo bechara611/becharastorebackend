@@ -428,14 +428,14 @@ export const uploadImage = async (req = request, res = response) => {
         const { tempFilePath } = imagen
         //TODO limitar tamano del archivo
         console.log(imagen.size/1000000)
-        if(imagen.size/1000000>2.5){ //hay que dividir entre 1000000 para tener el valor en megas
+        if(imagen.size>300){
             return res.status(400).json({
                 ok: false,
                 errores: {
                     errors: [{
     
     
-                        msg: 'IMAGE TO BIG, MAX 2MG',
+                        msg: 'IMAGE TO BIG',
     
     
                     }

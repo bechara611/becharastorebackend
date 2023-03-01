@@ -326,7 +326,7 @@ export const UpdateProducto = async (req = request, res = response) => {
                     const nombre = nombreSplit1[nombreSplit1.length - 1].split('.')
                     //salida: un arrayz con ycmvpqp9t1uudpmncrr9 y en la otra posicion png
                     const ID_PUBLICO = nombre[0];
-                    // console.log(ID_PUBLICO);
+                    console.log(ID_PUBLICO);
 
 
 
@@ -427,23 +427,6 @@ export const uploadImage = async (req = request, res = response) => {
         //?Desestructura el tempFilePath que se usa el claudinary para subir la foto
         const { tempFilePath } = imagen
         //TODO limitar tamano del archivo
-        console.log(imagen.size/1000000)
-        if(imagen.size/1000000>2.5){ //hay que dividir entre 1000000 para tener el valor en megas
-            return res.status(400).json({
-                ok: false,
-                errores: {
-                    errors: [{
-    
-    
-                        msg: 'IMAGE TO BIG, MAX 2MG',
-    
-    
-                    }
-                    ],
-    
-                }
-            })
-        }
         const resp = await cloudinaryInstancia.uploader.upload(tempFilePath)
             .then((resp) => {
                 return resp

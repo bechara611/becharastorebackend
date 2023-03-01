@@ -320,22 +320,22 @@ export const UpdateProducto = async (req = request, res = response) => {
                 if (existe.urlimg) {
                     //borrar la imagen del servidor de cloudinary
                     //entrada:     "img": "https://res.cloudinary.com/dscpbsjbj/image/upload/v1656357342/ycmvpqp9t1uudpmncrr9.png"
-                    const nombreSplit1 = existe.urlimg.split('/');
+                    const nombreSplit1 = existe.img.split('/');
                     //Salida: arrayz por cada /, la ultima posicion es: v1656357342/ycmvpqp9t1uudpmncrr9.png
                     //otro split
                     const nombre = nombreSplit1[nombreSplit1.length - 1].split('.')
                     //salida: un arrayz con ycmvpqp9t1uudpmncrr9 y en la otra posicion png
                     const ID_PUBLICO = nombre[0];
-                    // console.log(ID_PUBLICO);
+                    console.log(ID_PUBLICO);
 
 
 
 
 
-                    await cloudinaryInstancia.uploader.destroy(ID_PUBLICO);
+                    cloudinaryInstancia.uploader.destroy(ID_PUBLICO);
                 }
             } catch (error) {
-                console.log(error)
+
             }
         }
         //?Tambien le retornamos todos los productos por si el frontend los necesita
@@ -427,23 +427,6 @@ export const uploadImage = async (req = request, res = response) => {
         //?Desestructura el tempFilePath que se usa el claudinary para subir la foto
         const { tempFilePath } = imagen
         //TODO limitar tamano del archivo
-        console.log(imagen.size/1000000)
-        if(imagen.size/1000000>2.5){ //hay que dividir entre 1000000 para tener el valor en megas
-            return res.status(400).json({
-                ok: false,
-                errores: {
-                    errors: [{
-    
-    
-                        msg: 'IMAGE TO BIG, MAX 2MG',
-    
-    
-                    }
-                    ],
-    
-                }
-            })
-        }
         const resp = await cloudinaryInstancia.uploader.upload(tempFilePath)
             .then((resp) => {
                 return resp

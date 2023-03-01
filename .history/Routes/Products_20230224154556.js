@@ -12,7 +12,7 @@ const RutasProductos = Router();
 
 RutasProductos.get('/',
 //[check('token','INSERT A VALID A TOKEN').custom(VerificarJWT),
-ValidarErrores,
+ValidarErrores],
 getProductos)
 
 RutasProductos.post('/insert',
